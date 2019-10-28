@@ -7,9 +7,6 @@ import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabas
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
-import java.util.List;
-
-import static org.assertj.core.api.Assertions.assertThat;
 import static org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase.Replace.NONE;
 
 @RunWith(SpringRunner.class)
@@ -22,14 +19,16 @@ public class CommentRepositoryTest {
 
 	@Test
 	public void crud() {
-		Comment comment = new Comment();
-		comment.setComment("Hello Comment");
-		commentRepository.save(comment);
 
-		List<Comment> all = commentRepository.findAll();
-		assertThat(all.size()).isEqualTo(3);
+		commentRepository.save(null);
 
-		long count = commentRepository.count();
-		assertThat(count).isEqualTo(3);
+		// Optional Supports Test
+//		Optional<Comment> byId = commentRepository.findById(100l);
+//		assertThat(byId).isEmpty();
+//		Comment comment = byId.orElseThrow(IllegalAccessError::new);
+
+		// Collection never retuns Null
+//		List<Comment> comments = commentRepository.findAll();
+//		assertThat(comments).isEmpty();,
 	}
 }
