@@ -20,8 +20,6 @@ public class CommentRepositoryTest {
 	@Test
 	public void crud() {
 
-		commentRepository.save(null);
-
 		// Optional Supports Test
 //		Optional<Comment> byId = commentRepository.findById(100l);
 //		assertThat(byId).isEmpty();

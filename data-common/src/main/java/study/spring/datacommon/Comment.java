@@ -17,6 +17,8 @@ public class Comment {
 
 	private String comment;
 
+	private int likeCount;
+
 	public Post getPost() {
 		return post;
 	}
