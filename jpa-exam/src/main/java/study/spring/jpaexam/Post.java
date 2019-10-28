@@ -33,6 +33,10 @@ public class Post {
 		return title;
 	}
 
+	public Long getId() {
+		return id;
+	}
+
 	@Override
 	public String toString() {
 		return "Post{" +
