@@ -17,7 +17,7 @@ public class Comment {
 
 	private String comment;
 
-	private int likeCount;
+	private Integer likeCount = 0;
 
 	public Post getPost() {
 		return post;
@@ -33,6 +33,14 @@ public class Comment {
 
 	public void setComment(String comment) {
 		this.comment = comment;
+	}
+
+	public Integer getLikeCount() {
+		return likeCount;
+	}
+
+	public void setLikeCount(Integer likeCount) {
+		this.likeCount = likeCount;
 	}
 
 	@Override
