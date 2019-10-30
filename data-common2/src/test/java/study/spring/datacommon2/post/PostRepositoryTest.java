@@ -7,6 +7,8 @@ import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.test.context.junit4.SpringRunner;
 
+import static org.assertj.core.api.Assertions.assertThat;
+
 @RunWith(SpringRunner.class)
 @DataJpaTest
 public class PostRepositoryTest {
@@ -18,10 +20,16 @@ public class PostRepositoryTest {
 	public void crud() {
 		Post post = new Post();
 		post.setTitle("hibernate");
+
+		assertThat(postRepository.contains(post)).isFalse();
+
 		postRepository.save(post);
 
-		postRepository.findMyPost();
+		assertThat(postRepository.contains(post)).isTrue();
+
+		assertThat(postRepository.findAll().isEmpty()).isFalse();
 
 		postRepository.delete(post);
+		postRepository.flush();
 	}
 }
