@@ -41,4 +41,21 @@ public class PostControllerTest {
 				.andExpect(status().isOk())
 				.andExpect(content().string("jpa"));
 	}
+
+	@Test
+	public void getPosts() throws Exception {
+		Post post = new Post();
+		post.setTitle("jpa");
+		postRepository.save(post);
+
+		mockMvc.perform(get("/posts/")
+					.param("page", "0")
+					.param("size", "10")
+					.param("sort", "created.desc")
+					.param("sort", "title"))
+				.andDo(print())
+				.andExpect(status().isOk());
+	}
+
+
 }
