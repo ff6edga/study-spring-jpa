@@ -6,6 +6,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -17,16 +19,32 @@ public class PostRepositoryTest {
 	@Autowired
 	private PostRepository postRepository;
 
+	@PersistenceContext
+	private EntityManager entityManager;
+
 	@Test
-	public void crud() {
+	public void save() {
 		Post post = new Post();
 		post.setTitle("jpa");
+		Post savedPost = postRepository.save(post); // insert (persist)
 
-		// 현재 id 프로퍼티에 @GeneratedValue가 빠졌으므로
-		// Exception이 발생하는데 SQLException을
-		// DataAccessException 계층으로 변경해 주기 때문에
-		// 보다 더 자세하고 친절한 Exception내용을 볼 수 있다.
+		assertThat(entityManager.contains(post)).isTrue();
+		assertThat(entityManager.contains(savedPost)).isTrue();
+		assertThat(savedPost == post);
+
+		Post postUpdate = new Post();
+		postUpdate.setId(1l);
+		postUpdate.setTitle("hibernate");
+		// merge가 발생하며 JPA대신 Hibernate에서 수정이 일어난다.
+		Post updatedPost = postRepository.save(postUpdate); // update
+
+		assertThat(entityManager.contains(updatedPost)).isTrue();
+		// entityManager.merge()가 실행될때, 원본 객체는 영속화 되지 않는다.
+		assertThat(entityManager.contains(postUpdate)).isFalse();
+		assertThat(updatedPost == postUpdate);
+
 		List<Post> all = postRepository.findAll();
 		assertThat(all.size()).isEqualTo(1);
+
 	}
 }
