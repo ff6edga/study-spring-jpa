@@ -4,6 +4,8 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.jpa.domain.JpaSort;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import javax.persistence.EntityManager;
@@ -60,7 +62,11 @@ public class PostRepositoryTest {
 	public void findByTitle() {
 		savePost();
 
-		List<Post> all = postRepository.findByTitle("Spring");
+		List<Post> all =
+				// Sort.by 로는 alias나 property 정렬만 가능하지만
+				//postRepository.findByTitle("Spring", Sort.by("LENGTH(title)"));
+				// 기타조합도 쓰고 싶다면 아래와 같이 사용하자
+				postRepository.findByTitle("Spring", JpaSort.unsafe("LENGTH(title)"));
 		assertThat(all.size()).isEqualTo(1);
 	}
 
