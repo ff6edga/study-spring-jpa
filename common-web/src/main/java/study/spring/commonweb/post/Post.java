@@ -4,6 +4,9 @@ import javax.persistence.*;
 import java.util.Date;
 
 @Entity
+//@NamedQuery(name = "Post.findByTitle",
+//		//JPQL, native query를 원한다면 @NamedNativeQuery
+//		query = "SELECT p FROM Post AS p WHERE p.title = ?1")
 public class Post {
 	@Id
 	@GeneratedValue
