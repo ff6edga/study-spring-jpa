@@ -4,13 +4,13 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
-import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.JpaSort;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import java.util.List;
+import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -70,9 +70,34 @@ public class PostRepositoryTest {
 		assertThat(all.size()).isEqualTo(1);
 	}
 
-	private void savePost() {
+	private Post savePost() {
 		Post post = new Post();
 		post.setTitle("Spring");
-		postRepository.save(post); // persist
+		return postRepository.save(post); // persist
 	}
+
+	@Test
+	public void updateTitle() {
+		Post spring = savePost();
+
+		String hibernate = "hibernate";
+		int update = postRepository.updateFile("hibernate", spring.getId());
+		assertThat(update).isEqualTo(1);
+
+		// 하나의 트랜잭션내에서 persist 상태가 된 객체는 캐싱되므로
+		// update가 되어도 아래처럼 캐시를 날리지 않으면 이전 객체를 리턴한다.
+		// @Modifying(clearAutomatically = true, flushAutomatically = true)
+		Optional<Post> byId = postRepository.findById(spring.getId());
+		assertThat(byId.get().getTitle()).isEqualTo(hibernate);
+	}
+
+	@Test
+	public void updateTitleByLogic() {
+		Post spring = savePost();
+		spring.setTitle("hibernate");
+
+		List<Post> all = postRepository.findAll();
+		assertThat(all.get(0).getTitle()).isEqualTo("hibernate");
+	}
+
 }
